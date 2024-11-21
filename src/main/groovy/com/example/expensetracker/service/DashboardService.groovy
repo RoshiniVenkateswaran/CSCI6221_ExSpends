@@ -14,13 +14,13 @@ class DashboardService {
     @Autowired
     ExpensesRepository expensesRepository
 
-    def getDashboardData() {
-        def incomeData = incomeRepository.findAll()
-        def expenseData = expensesRepository.findAll()
+    def getDashboardData(Long accountId) {
+        def incomeData = incomeRepository.findByAccountId(accountId)
+        def expenseData = expensesRepository.findByAccountId(accountId)
 
         if (!incomeData || !expenseData) {
             return [
-                message: "No data available",
+                message: "No data available for the given accountId",
                 income: [],
                 expenses: []
             ]
@@ -29,6 +29,8 @@ class DashboardService {
         return [
             totalIncome: incomeData.sum { it.amount },
             totalExpenses: expenseData.sum { it.amount },
+            incomeDetails: incomeData,
+            expenseDetails: expenseData,
             message: "Dashboard data retrieved successfully"
         ]
     }

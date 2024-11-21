@@ -13,31 +13,63 @@ class ProfileController {
     @Autowired
     ProfileService profileService
 
+    /**
+     * Get Profile by Account ID
+     */
     @GetMapping("/profile")
     ResponseEntity<?> getProfile(@RequestParam("accountId") Integer accountId) {
         try {
             def profile = profileService.getProfile(accountId)
-            return profile ? ResponseEntity.ok(profile) :
-                    ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body([message: "No profile found for accountId ${accountId}"])
+            if (profile) {
+                return ResponseEntity.ok([
+                    status : HttpStatus.OK.value(),
+                    message: "Profile retrieved successfully",
+                    data   : profile
+                ])
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body([
+                    status : HttpStatus.NOT_FOUND.value(),
+                    message: "No profile found for accountId ${accountId}",
+                    data   : null
+                ])
+            }
         } catch (Exception e) {
             e.printStackTrace()
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body([message: "An error occurred: ${e.message}"])
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while retrieving the profile: ${e.message}",
+                data   : null
+            ])
         }
     }
 
+    /**
+     * Update Profile
+     */
     @PutMapping("/profile")
     ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> profileDetails) {
         try {
             def updatedProfile = profileService.updateProfile(profileDetails)
-            return updatedProfile ? ResponseEntity.ok([message: "Profile updated successfully", updatedProfile: updatedProfile]) :
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body([message: "Profile update failed"])
+            if (updatedProfile) {
+                return ResponseEntity.ok([
+                    status : HttpStatus.OK.value(),
+                    message: "Profile updated successfully",
+                    data   : updatedProfile
+                ])
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body([
+                    status : HttpStatus.BAD_REQUEST.value(),
+                    message: "Failed to update profile",
+                    data   : null
+                ])
+            }
         } catch (Exception e) {
             e.printStackTrace()
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body([message: "An error occurred: ${e.message}"])
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while updating the profile: ${e.message}",
+                data   : null
+            ])
         }
     }
 }

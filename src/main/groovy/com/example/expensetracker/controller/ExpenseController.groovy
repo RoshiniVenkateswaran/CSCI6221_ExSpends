@@ -3,6 +3,8 @@ package com.example.expensetracker.controller
 import com.example.expensetracker.entity.Expenses
 import com.example.expensetracker.service.ExpenseService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -13,12 +15,45 @@ class ExpenseController {
     ExpenseService expenseService
 
     @GetMapping
-    List<Expenses> getExpenses(@RequestParam Long accountId) {
-        return expenseService.getExpenses(accountId)
+    ResponseEntity<?> getExpenses(@RequestParam Long accountId) {
+        try {
+            def expenses = expenseService.getExpenses(accountId)
+            if (!expenses.isEmpty()) {
+                return ResponseEntity.ok([
+                    status : HttpStatus.OK.value(),
+                    message: "Expenses retrieved successfully",
+                    data   : expenses
+                ])
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body([
+                    status : HttpStatus.NOT_FOUND.value(),
+                    message: "No expenses found for accountId ${accountId}"
+                ])
+            }
+        } catch (Exception e) {
+            e.printStackTrace()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while retrieving expenses: ${e.message}"
+            ])
+        }
     }
 
     @PostMapping
-    Expenses addExpense(@RequestBody Expenses expense) {
-        return expenseService.addExpense(expense)
+    ResponseEntity<?> addExpense(@RequestBody Expenses expense) {
+        try {
+            def addedExpense = expenseService.addExpense(expense)
+            return ResponseEntity.status(HttpStatus.CREATED).body([
+                status : HttpStatus.CREATED.value(),
+                message: "Expense added successfully",
+                data   : addedExpense
+            ])
+        } catch (Exception e) {
+            e.printStackTrace()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while adding the expense: ${e.message}"
+            ])
+        }
     }
 }

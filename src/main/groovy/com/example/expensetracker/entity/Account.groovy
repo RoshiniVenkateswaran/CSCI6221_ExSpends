@@ -2,6 +2,7 @@ package com.example.expensetracker.entity
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Entity
 @Table(name = "Account")
@@ -29,5 +30,5 @@ class Account {
     String currency
 
     @Column(nullable = false)
-    LocalDateTime createdAt = LocalDateTime.now()
+    String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 }

@@ -65,7 +65,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
                 <mainClass>com.example.expensetracker.Application</mainClass>
-            </configuration>
+           		</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.gmavenplus</groupId>

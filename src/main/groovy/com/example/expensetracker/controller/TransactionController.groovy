@@ -13,25 +13,63 @@ class TransactionController {
     @Autowired
     TransactionService transactionService
 
+    /**
+     * Add Income
+     */
     @PostMapping("/income")
     ResponseEntity<?> addIncome(@RequestBody Map<String, Object> incomeDetails) {
         try {
             def response = transactionService.addIncome(incomeDetails)
-            return ResponseEntity.status(HttpStatus.CREATED).body(response)
+            if (response) {
+                return ResponseEntity.status(HttpStatus.CREATED).body([
+                    status : HttpStatus.CREATED.value(),
+                    message: "Income added successfully",
+                    data   : response
+                ])
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body([
+                    status : HttpStatus.BAD_REQUEST.value(),
+                    message: "Failed to add income",
+                    data   : null
+                ])
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body([message: "An error occurred while adding income: ${e.message}"])
+            e.printStackTrace()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while adding income: ${e.message}",
+                data   : null
+            ])
         }
     }
 
+    /**
+     * Add Expense
+     */
     @PostMapping("/expense")
     ResponseEntity<?> addExpense(@RequestBody Map<String, Object> expenseDetails) {
         try {
             def response = transactionService.addExpense(expenseDetails)
-            return ResponseEntity.status(HttpStatus.CREATED).body(response)
+            if (response) {
+                return ResponseEntity.status(HttpStatus.CREATED).body([
+                    status : HttpStatus.CREATED.value(),
+                    message: "Expense added successfully",
+                    data   : response
+                ])
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body([
+                    status : HttpStatus.BAD_REQUEST.value(),
+                    message: "Failed to add expense",
+                    data   : null
+                ])
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body([message: "An error occurred while adding expense: ${e.message}"])
+            e.printStackTrace()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status : HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred while adding expense: ${e.message}",
+                data   : null
+            ])
         }
     }
 }

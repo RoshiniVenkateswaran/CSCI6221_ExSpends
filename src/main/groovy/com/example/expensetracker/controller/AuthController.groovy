@@ -21,15 +21,23 @@ class AuthController {
     ResponseEntity<?> register(@RequestBody Account account) {
         try {
             def response = authService.register(account)
-            if (response.message == "Registration successful") {
-                return ResponseEntity.status(HttpStatus.CREATED).body(response)
+            if (response?.message == "Registration successful") {
+                return ResponseEntity.status(HttpStatus.CREATED).body([
+                    status: HttpStatus.CREATED.value(),
+                    message: response.message
+                ])
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body([
+                    status: HttpStatus.BAD_REQUEST.value(),
+                    message: response?.message ?: "Registration failed"
+                ])
             }
         } catch (Exception e) {
             e.printStackTrace()
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body([message: "An error occurred: ${e.message}"])
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status: HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred: ${e.message}"
+            ])
         }
     }
 
@@ -43,15 +51,24 @@ class AuthController {
             def password = credentials.get("password")
 
             def response = authService.login(username, password)
-            if (response.message == "Login successful") {
-                return ResponseEntity.ok(response)
+            if (response?.message == "Login successful") {
+                return ResponseEntity.ok([
+                    status: HttpStatus.OK.value(),
+                    message: response.message,
+                    accountId: response.accountId
+                ])
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body([
+                    status: HttpStatus.UNAUTHORIZED.value(),
+                    message: response?.message ?: "Invalid credentials"
+                ])
             }
         } catch (Exception e) {
             e.printStackTrace()
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body([message: "An error occurred: ${e.message}"])
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body([
+                status: HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                message: "An error occurred: ${e.message}"
+            ])
         }
     }
 }

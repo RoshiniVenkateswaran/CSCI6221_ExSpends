@@ -1,7 +1,6 @@
 package com.example.expensetracker.entity
 
 import jakarta.persistence.*
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "expenses")
@@ -22,8 +21,8 @@ class Expenses {
     Double amount
 
     @Column(name = "entry_date", nullable = false)
-    LocalDateTime entryDate
-
+    String entryDate
+    
     @Column(name = "notes")
     String notes
 }

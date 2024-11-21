@@ -22,7 +22,7 @@ class Income {
     Double amount
 
     @Column(name = "entry_date", nullable = false)
-    LocalDateTime entryDate
+    String entryDate
 
     @Column(name = "notes")
     String notes

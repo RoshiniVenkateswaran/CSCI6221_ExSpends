@@ -33,15 +33,15 @@ class AuthService {
     def login(String username, String password) {
         def accountOptional = accountRepository.findByUsername(username)
         if (!accountOptional.isPresent()) {
-            return [message: "Invalid username or password"]
+            return [message: "Invalid username or password", accountId: null]
         }
 
         def account = accountOptional.get()
         // Check if the provided password matches the account password
         if (account.password == password) { // Assuming plaintext password comparison
-            return [message: "Login successful"]
+            return [message: "Login successful", accountId: account.accountId]
         } else {
-            return [message: "Invalid username or password"]
+            return [message: "Invalid username or password", accountId: null]
         }
     }
 }

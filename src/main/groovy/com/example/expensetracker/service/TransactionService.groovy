@@ -25,7 +25,7 @@ class TransactionService {
                 accountId: incomeDetails.accountId as Long,
                 sourceId: incomeDetails.sourceId as Long,
                 amount: incomeDetails.amount as Double,
-                entryDate: LocalDateTime.parse(incomeDetails.entryDate as String, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                entryDate: incomeDetails.entryDate as String,
                 notes: incomeDetails.notes as String
             )
             def savedIncome = incomeRepository.save(income)
@@ -41,7 +41,7 @@ class TransactionService {
                 accountId: expenseDetails.accountId as Long,
                 categoryId: expenseDetails.categoryId as Long,
                 amount: expenseDetails.amount as Double,
-                entryDate: LocalDateTime.parse(expenseDetails.entryDate as String, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                entryDate: expenseDetails.entryDate as String,
                 notes: expenseDetails.notes as String
             )
             def savedExpense = expensesRepository.save(expense)
